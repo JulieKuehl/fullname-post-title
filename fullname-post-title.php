@@ -41,15 +41,22 @@ function fullname_post_title_shortcode( $atts, $content = null ) {
 add_shortcode("fullname_post_title", "fullname_post_title_shortcode");
 
 
-function fullname_post_title_title() {
+function fullname_post_title_title( $data, $postarr ) {
 
-	$title_of_post = ; 	// Pods fullname
-	$length_of_title = strlen($title_of_post);
+	$title_of_post = ltrim($data['post_title']);
+	$length_of_title = strlen($title_of_post);      // get length to see if > 0
+	$students = new Pod('students');
 
 	if($length_of_title < 1) {
-		// use Pods fullname
+
+		$firstname = $students->get_field('student_first_name' );  // Pods firstname fields
+		$lastname = $students->get_filed( 'student_last_name' );   // Pods lastname fields
+		$fullname = $firstname . " " . $lastname;   // concatenate Pods name fields
+
+		$data['post_title'] = substr($fullname,0,255);
 	}
 
 }
+add_filter( 'wp_insert_post_data' , 'fullname_post_title_title' , '99', 2 );
 
 ?>
