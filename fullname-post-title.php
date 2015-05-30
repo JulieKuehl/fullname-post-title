@@ -10,53 +10,36 @@ License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 */
 
-//function agt_shortcode( $atts, $content = null ) {
-//	return $content;
-//}
-//add_shortcode("agt", "agt_shortcode");
+/*
+ * HELPFUL REFERENCES
+ * https://mondaybynoon.com/pulling-pods-data/
+ * http://stackoverflow.com/questions/21717159/get-custom-fields-values-in-filter-on-wp-insert-post-data
+ * http://pods.io/forums/topic/need-code-sample-for-pods-custom-setting-page/
+ * http://wordpress.stackexchange.com/questions/67262/change-post-title-during-post-saving-process
+ */
+
+add_filter('wp_insert_post_data', 'set_title');
+
+function set_title( $data ) {
+
+//	$students = pods( 'students' );
 //
-//add_filter( 'wp_insert_post_data' , 'auto_generate_title' , '99', 2 );
-//function auto_generate_title( $data , $postarr )
-//{
-//	$title_of_post = ltrim($data['post_title']);
-//	$length_of_title = strlen($title_of_post);
-//	$postdata = ltrim($data['post_content']);
-//	if($length_of_title<1)
-//	{
-//		$matchPattern = "/\[agt\](.*?)\[\/agt\]/";
-//		preg_match_all($matchPattern, $postdata, $foundIt, PREG_PATTERN_ORDER);
-//		if (isset($foundIt[1][0]))
-//			$data['post_title'] =  $foundIt[1][0];
-//		else
-//			$data['post_title'] = substr($postdata,0,30);
-//	}
-//	return $data;
-//}
+//	$firstname = $students->field( 'student_first_name' );
+//	$lastname  = $students->field( 'student_last_name' );
+//
+//	var_dump( $firstname );
 
+//	$firstname = get_field('student_first_name',$post_id);
+//	$lastname = get_field('student_last_name',$post_id);
+//	$post_title = $firstname . ' ' . $lastname;
 
+	// for testing
+	$post_title = "Full Name";
 
-function fullname_post_title_shortcode( $atts, $content = null ) {
-	return $content;
-}
-add_shortcode("fullname_post_title", "fullname_post_title_shortcode");
+	$data['post_title'] = $post_title;
 
-
-function fullname_post_title_title( $data, $postarr ) {
-
-	$title_of_post = ltrim($data['post_title']);
-	$length_of_title = strlen($title_of_post);      // get length to see if > 0
-	$students = new Pod('students');
-
-	if($length_of_title < 1) {
-
-		$firstname = $students->get_field('student_first_name' );  // Pods firstname fields
-		$lastname = $students->get_filed( 'student_last_name' );   // Pods lastname fields
-		$fullname = $firstname . " " . $lastname;   // concatenate Pods name fields
-
-		$data['post_title'] = substr($fullname,0,255);
-	}
+	return $data;
 
 }
-add_filter( 'wp_insert_post_data' , 'fullname_post_title_title' , '99', 2 );
 
 ?>
